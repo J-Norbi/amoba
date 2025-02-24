@@ -30,6 +30,10 @@ namespace _2_14fi_WPF_masodik
         }
         void Start()
         {
+            jatekos1.Content += Dataa.users[0].username;
+            jatekos2.Content += Dataa.users[1].username;
+            pontok1.Content += $"{Dataa.users[0].win}/{Dataa.users[0].lose}/{Dataa.users[0].draw}";
+            pontok2.Content += $"{Dataa.users[1].win}/{Dataa.users[1].lose}/{Dataa.users[1].draw}";
             for (int i = 0; i < 9; i++)
             {
                 int row = (int)Math.Floor((double)i / 3);
@@ -39,6 +43,8 @@ namespace _2_14fi_WPF_masodik
                 Grid.SetColumn(oneButton, col);
                 buttons.Add(oneButton);
                 gameplace.Children.Add(oneButton);
+                oneButton.FontSize = 80;
+                oneButton.Foreground = new SolidColorBrush(Colors.White);
                 oneButton.Click += ClickEvent;
                 //oneButton.Content = i;
             }
@@ -59,7 +65,15 @@ namespace _2_14fi_WPF_masodik
                 data[row, col] = num;
                 //kiszínezzük a megfelelő színre a gombot
                 SolidColorBrush color = new SolidColorBrush(Colors.Blue);
-                if (Red) color = new SolidColorBrush(Colors.Red);
+                if (Red)
+                {
+                    color = new SolidColorBrush(Colors.Red);
+                    (s as Button).Content = "O";
+                }
+                else
+                {
+                    (s as Button).Content = "X";
+                }
                 (s as Button).Background = color;
                 //következő játékos jön, másik színnel
                 Red = !Red;
@@ -78,6 +92,7 @@ namespace _2_14fi_WPF_masodik
             else
                 return;
             //csak akkor fut le, ha vége a játéknak
+
             buttons.ForEach(button => button.Click -= ClickEvent);
         }
         private int CheckBoard()

@@ -20,12 +20,15 @@ namespace _2_14fi_WPF_masodik
     public partial class LoginWindow : Window
     {
         ServerConnection connection;
+        Registration regWindow;
+        second gameWindow;
         public LoginWindow()
         {
             InitializeComponent();
             connection = new ServerConnection();
+
         }
-        private void LoginClick(Object s, EventArgs e) {
+        private void LoginClick(object s, EventArgs e) {
             Button sender = s as Button;
             string username;
             string password;
@@ -40,6 +43,33 @@ namespace _2_14fi_WPF_masodik
                 password = user2Pass.Text;
             }
             connection.Login(username, password);
+        }
+        private void RegistrationClick(object s, EventArgs e) 
+        {
+            regWindow = new Registration();
+            regWindow.Top = this.Top;
+            regWindow.Left = this.Left;
+            regWindow.Closing += (ss, ee) =>
+            {
+                this.Show();
+            };
+
+            regWindow.Show();
+            this.Hide();
+        }
+        private void NewGame(object s, EventArgs e)
+        {
+            
+            if(Dataa.users.Count == 2)
+            {
+                this.Hide();
+                gameWindow = new second();
+                gameWindow.Show();
+                gameWindow.Closing += (ss, ee) =>
+                {
+                    this.Show();
+                };
+            }
         }
     }
 }

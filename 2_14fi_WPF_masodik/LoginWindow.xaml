@@ -56,9 +56,9 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Name="LoginButton" Content="Játék!" Width="200" Height="50"/>
+            <Button Name="GameButton" Content="Játék!" Width="200" Height="50" Click="NewGame"/>
             <Button Name="RegisterButton" Content="Regisztráció" Grid.Row="1"
-                    Width="200" Height="50"/>
+                    Width="200" Height="50" Click="RegistrationClick"/>
         </Grid>
     </Grid>
 </Window>

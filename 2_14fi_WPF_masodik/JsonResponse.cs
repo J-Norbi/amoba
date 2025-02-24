@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace _2_14fi_WPF_masodik
 {
-    class JsonResponse
+    public class JsonResponse
     {
+        public string username {  get; set; }
         public string lose { get; set; }
         public string message { get; set; }
         public string token { get; set; }
