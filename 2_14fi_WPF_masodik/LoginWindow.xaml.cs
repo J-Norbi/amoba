@@ -26,9 +26,48 @@ namespace _2_14fi_WPF_masodik
         {
             InitializeComponent();
             connection = new ServerConnection();
-
+            Dataa.users.CollectionChanged += ObservableEvent;
+            this.IsVisibleChanged += WindowVisibility;
         }
-        private void LoginClick(object s, EventArgs e) {
+        void WindowVisibility(object s, DependencyPropertyChangedEventArgs e)            // amikor nem látszik az ablak, akkor ne fusson le az esemény updatelése
+        {
+            if(this.Visibility == Visibility.Visible)
+            {
+                Dataa.users.CollectionChanged += ObservableEvent;
+            }
+            else
+            {
+                Dataa.users.CollectionChanged -= ObservableEvent;
+            }
+        }
+        void ObservableEvent(object s, EventArgs e)
+        {
+            if (Dataa.users[0].username != null)
+            {
+                player1.Background = new SolidColorBrush(Colors.Green);
+                if (Dataa.users[0].token == null)
+                {
+                    player1.Background = new SolidColorBrush(Colors.LightBlue);
+                }
+            }
+            else if (Dataa.users[0].username == null)
+            {
+                player1.Background = new SolidColorBrush(Colors.White);
+            }
+            if (Dataa.users[1].username != null)
+            {
+                player2.Background = new SolidColorBrush(Colors.Green);
+                if (Dataa.users[1].token == null)
+                {
+                    player2.Background = new SolidColorBrush(Colors.LightBlue);
+                }
+            }
+            else if (Dataa.users[1].username == null)
+            {
+                player2.Background = new SolidColorBrush(Colors.White);
+            }
+        }
+        private async void LoginClick(object s, EventArgs e) {
             Button sender = s as Button;
             string username;
             string password;
@@ -36,13 +75,34 @@ namespace _2_14fi_WPF_masodik
             {
                 username = user1Name.Text;
                 password = user1Pass.Text;
+                if(password.Length < 1)
+                {
+                    Dataa.users[0] = new JsonResponse() { username = username, draw = 0, lose = 0, win = 0 };
+                    return;
+                }
             }
             else
             {
                 username = user2Name.Text;
                 password = user2Pass.Text;
+                if (password.Length < 1)
+                {
+                    Dataa.users[1] = new JsonResponse() { username = username, draw = 0, lose = 0, win = 0 };
+                    return;
+                }
             }
-            connection.Login(username, password);
+            if (Dataa.users.Where(user => user.username == username && user.token != null).Count() == 1)
+            {
+                MessageBox.Show("Duplikált bejelentkezés");
+            }
+            else
+            {
+                JsonResponse onePlayer = await connection.Login(username, password);
+                if (sender.Name == "user1Login")
+                    Dataa.users[0] = onePlayer;
+                else
+                    Dataa.users[1] = onePlayer;
+            }
         }
         private void RegistrationClick(object s, EventArgs e) 
         {
@@ -53,22 +113,26 @@ namespace _2_14fi_WPF_masodik
             {
                 this.Show();
             };
-
+            
             regWindow.Show();
             this.Hide();
         }
         private void NewGame(object s, EventArgs e)
         {
             
-            if(Dataa.users.Count == 2)
+            if(Dataa.users.Where(user => user.username != null).Count() == 2)
             {
                 this.Hide();
-                gameWindow = new second();
+                gameWindow = new second(connection);
                 gameWindow.Show();
                 gameWindow.Closing += (ss, ee) =>
                 {
                     this.Show();
                 };
+            }
+            else
+            {
+                MessageBox.Show("Nincs két bejelentkezett felhasználó");
             }
         }
     }

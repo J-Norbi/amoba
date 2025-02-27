@@ -23,17 +23,20 @@ namespace _2_14fi_WPF_masodik
         private bool Red = false;
         private int[,] data = new int[3, 3];
         private int ClickCount = 0;
-        public second()
+        ServerConnection connection;
+        public second(ServerConnection connection)
         {
             InitializeComponent();
+            this.connection = connection;
             Start();
         }
         void Start()
         {
-            jatekos1.Content += Dataa.users[0].username;
-            jatekos2.Content += Dataa.users[1].username;
-            pontok1.Content += $"{Dataa.users[0].win}/{Dataa.users[0].lose}/{Dataa.users[0].draw}";
-            pontok2.Content += $"{Dataa.users[1].win}/{Dataa.users[1].lose}/{Dataa.users[1].draw}";
+            jatekos1.Content = Dataa.users[0].username;
+            jatekos2.Content = Dataa.users[1].username;
+            jatekos1.Background = new SolidColorBrush(Colors.Blue);
+            pontok1.Content = $"Pontok: {Dataa.users[0].win}/{Dataa.users[0].lose}/{Dataa.users[0].draw}";
+            pontok2.Content = $"Pontok: {Dataa.users[1].win}/{Dataa.users[1].lose}/{Dataa.users[1].draw}";
             for (int i = 0; i < 9; i++)
             {
                 int row = (int)Math.Floor((double)i / 3);
@@ -48,9 +51,8 @@ namespace _2_14fi_WPF_masodik
                 oneButton.Click += ClickEvent;
                 //oneButton.Content = i;
             }
-
         }
-        private void ClickEvent(Object s, EventArgs e)
+        private void ClickEvent(object s, EventArgs e)
         {
             //megkeressük a mátrixban a gombot
             int index = buttons.IndexOf((s as Button));
@@ -69,10 +71,14 @@ namespace _2_14fi_WPF_masodik
                 {
                     color = new SolidColorBrush(Colors.Red);
                     (s as Button).Content = "O";
+                    jatekos1.Background = new SolidColorBrush(Colors.Blue);
+                    jatekos2.Background = new SolidColorBrush(Colors.White);
                 }
                 else
                 {
                     (s as Button).Content = "X";
+                    jatekos1.Background = new SolidColorBrush(Colors.White);
+                    jatekos2.Background = new SolidColorBrush(Colors.Red);
                 }
                 (s as Button).Background = color;
                 //következő játékos jön, másik színnel
@@ -84,15 +90,39 @@ namespace _2_14fi_WPF_masodik
             int check = CheckBoard();
             //MessageBox.Show(check.ToString());
             if (check == 1)
+            {
                 MessageBox.Show("Az első játékos nyert.");
+                Dataa.users[0].win++;
+                Dataa.users[1].lose++;
+            }
             else if (check == -1)
+            {
                 MessageBox.Show("A második játékos nyert.");
+                Dataa.users[1].win++;
+                Dataa.users[0].lose++;
+            }
             else if (ClickCount == 9)
+            {
                 MessageBox.Show("Döntetlen");
+                Dataa.users[0].draw++;
+                Dataa.users[1].draw++;
+            }
             else
                 return;
             //csak akkor fut le, ha vége a játéknak
-
+            GameOver(check);
+        }
+        private void GameOver(int num)
+        {
+            pontok1.Content = $"Pontok: {Dataa.users[0].win}/{Dataa.users[0].lose}/{Dataa.users[0].draw}";
+            pontok2.Content = $"Pontok: {Dataa.users[1].win}/{Dataa.users[1].lose}/{Dataa.users[1].draw}";
+            jatekos1.Background = new SolidColorBrush(Colors.White);
+            jatekos2.Background = new SolidColorBrush(Colors.White);
+            if(Dataa.users.Where(user => user.token != null).Count() == 2)
+            {
+                connection.Save(Dataa.users[0], num);
+                connection.Save(Dataa.users[1], -num);
+            }
             buttons.ForEach(button => button.Click -= ClickEvent);
         }
         private int CheckBoard()
@@ -135,7 +165,7 @@ namespace _2_14fi_WPF_masodik
             }
             return 0;
         }
-        private void ShowMatrix()
+        private void ShowMatrix()   // ezzel ellnőriztük, hogy mit ír ki a kattingatásnál
         {
             string temp = "";
             for (int i = 0; i < 3; i++)

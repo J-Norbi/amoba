@@ -24,7 +24,7 @@ namespace _2_14fi_WPF_masodik
         {
             InitializeComponent();
         }
-        void RegClick(object s, EventArgs e)
+        async void RegClick(object s, EventArgs e)
         {
             if(!(password.Text.Length > 2 && password.Text == password2.Text))
             {
@@ -36,8 +36,10 @@ namespace _2_14fi_WPF_masodik
                 MessageBox.Show("Nem elég hosszú a felhasználónév", "Error");
                 return;
             }
-            server.Registration(username.Text, password.Text);
-            this.Close();
+            if(await server.Registration(username.Text, password.Text))
+            {
+                this.Close();
+            }
         }
         void CancelClick(object s, EventArgs e)
         {

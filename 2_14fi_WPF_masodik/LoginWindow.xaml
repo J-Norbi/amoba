@@ -34,8 +34,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Label Content="Játékos 1" FontSize="20" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
-            <Label Content="Játékos 2" FontSize="20" Grid.Column="2" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
+            <Label Content="Játékos 1" Name="player1" FontSize="20" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
+            <Label Content="Játékos 2" Name="player2" FontSize="20" Grid.Column="2" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
             <Label Content="Felhasználónév:" Grid.Row="1" Padding="15 0 0 0"/>
             <Label Content="Jelszó:" Grid.Row="2" Padding="15 0 0 0"/>
             <TextBox Grid.Row="1" Grid.Column="1" Name="user1Name"/>

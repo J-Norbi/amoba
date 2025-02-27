@@ -28,8 +28,8 @@
         <Label Name="jatekos1" Grid.Row="1" Grid.Column="0" Content="Játékos1" FontSize="20"/>
         <Label Name="jatekos2" Grid.Row="1" Grid.Column="2" Content="Játékos2" FontSize="20"/>
         <Button Grid.Row="1" Grid.Column="1" Content="Újra" Margin="40 10"/>
-        <Label Name="pontok1" Grid.Row="2" Grid.Column="0" Content="Pontok1" FontSize="20"/>
-        <Label Name="pontok2" Grid.Row="2" Grid.Column="2" Content="Pontok2" FontSize="20"/>
+        <Label Name="pontok1" Grid.Row="2" Grid.Column="0" Content="Pontok: " FontSize="20"/>
+        <Label Name="pontok2" Grid.Row="2" Grid.Column="2" Content="Pontok: " FontSize="20"/>
         <Button Grid.Row="2" Grid.Column="1" Content="Csere" Margin="40 10"/>
         <Grid Name="gameplace" Grid.Row="3" Grid.ColumnSpan="3" Height="400" Width="400" Background="LightCoral">
             <Grid.RowDefinitions>
